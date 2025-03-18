@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tukipyyntö - <%= idFind %></title>
+    <style>
+      nav {
+        background-color: darkseagreen;
+        text-decoration: none;
+        display: flex;
+        justify-content: space-around;
+      }
+      .navi {
+        color: gray;
+        text-decoration: none;
+      }
+      .naviS {
+        color: black;
+        text-decoration: none;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 2px solid black;
+        margin-top: 5px;
+      }
+      th {
+        width: 20%;
+      }
+      th,
+      td {
+        border: 2px inset;
+        padding: 10px;
+      }
+      .c {
+        text-align: center;
+      }
+      .SendUi {
+        width: 90%;
+        margin: 30px auto;
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+      .SendUi form {
+        background-color: white;
+        padding: 20px;
+        flex: 1;
+        min-width: 300px;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .SendUi label {
+        font-weight: 500;
+      }
+      .SendUi select,
+      .SendUi input[type="text"],
+      .SendUi textarea {
+        width: 95%;
+        padding: 10px;
+        margin: 10px 0 20px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+        resize: vertical;
+      }
+      .SendUi button {
+        padding: 10px 20px;
+        background-color: #6fb98f;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+      .SendUi button:hover {
+        background-color: #5aa280;
+      }
+      .loguot {
+        margin: 10px;
+        text-align: center;
+      }
+      .loguot_but {
+        border-radius: 10px;
+        font-size: 20px;
+        color: black;
+        background-color: darkseagreen;
+      }
+      .loguot_but:hover {
+        background-color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a href="http://localhost:3000/asiakkaat" class="navi">
+        <h2>Asiakkaat ja käyttäjät</h2>
+      </a>
+      <a href="http://localhost:3000/tuki" class="naviS">
+        <h2>Tukipyynöt</h2>
+      </a>
+      <a href="http://localhost:3000/palaute" class="navi">
+        <h2>Palautteet</h2>
+      </a>
+    </nav>
+    <br />
+    <table>
+      <tr>
+        <th>ID: <%= idFind %></th>
+        <td class="c" colspan="2"><%= from_company %></td>
+      </tr>
+      <tr>
+        <th>Tila</th>
+        <th><%= getstatus %></th>
+        <td>
+          <p>Avattu: <%= create_ticketFix %></p>
+          <p>Käsitelty: <%= ticket_handledFix %></p>
+        </td>
+      </tr>
+      <tr>
+        <th>Kuvaus</th>
+        <td colspan="2" height="100px" class="c"><%= kuvaus %></td>
+      </tr>
+      <% for (let i = 0; i < ticketFind.length; i++) { %>
+      <tr>
+        <th><%= vastaus[i] %></th>
+        <td><%= from[i].fullname %></td>
+        <td><%= ticketFind[i].body %></td>
+      </tr>
+      <% } %>
+      <tr>
+        <th style="height: 20px"></th>
+        <td></td>
+        <td></td>
+      </tr>
+    </table>
+    <div class="SendUi">
+      <form action="/ChangeStatus" method="post">
+        <input type="hidden" name="pageId" value="<%= idFind %>" />
+        <select name="StatusChange" onchange="this.form.submit()">
+          <option value="0">Select status</option>
+          <option value="1">Open</option>
+          <option value="2">Working on</option>
+          <option value="3">Done</option>
+          <option value="4">Closed</option>
+        </select>
+      </form>
+
+      <form action="/SendMessage" method="post">
+        <input type="hidden" name="pageId" value="<%= idFind %>" />
+        <textarea
+          name="textInput"
+          placeholder="viesti"
+          class="Atext"
+          required
+          rows="4"
+        ></textarea>
+        <button type="submit">Lähetä</button>
+      </form>
+    </div>
+    <form class="loguot" action="/logout" method="get">
+      <button class="loguot_but" type="submit">Logout</button>
+    </form>
+  </body>
+</html>
