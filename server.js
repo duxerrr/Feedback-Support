@@ -401,6 +401,15 @@ app.get("/tuki/:id", requireLogin, async (req, res) => {
     let getstatus = "";
     let from_company = "";
 
+    const [ticketExists] = await connection.execute(
+      "SELECT id FROM support_message WHERE id = ?",
+      [idFind]
+    );
+
+    if (ticketExists.length === 0) {
+      return res.redirect("/tuki");
+    }
+
     for (let i = 0; i < supportM.length; i++) {
       let add = "";
       if (idFind == supportM[i].ticket_id) {
@@ -549,5 +558,5 @@ app.post("/SendMessage", requireLogin, async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}/asiakkaat`);
+  console.log(`Server running at http://localhost:${PORT}/`);
 });
